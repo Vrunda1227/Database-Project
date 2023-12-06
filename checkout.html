@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Out Books</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/checkout.css')}}">
+</head>
+
+<body>
+
+
+    <div id="check-in-books">
+        <h2>Check Out Books</h2>
+        <form action="/check-out-books" method="post">
+            <input type="text" name="search" placeholder="Enter ISBN Number">
+            <input type="submit" name="submit" value="Check Out">
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>ISBN</th>
+                    <th>Book Name</th>
+                    <th>Author</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" name="student1"></td>
+                    <td>1234567890</td>
+                    <td>some important things in life</td>
+                    <td>John Doe</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

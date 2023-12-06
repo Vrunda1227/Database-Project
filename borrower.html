@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/borrower.css')}}">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Library Management System</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/search">Search Books</a></li>
+                <li><a href="/checkin">CheckIn</a></li>
+                <!-- <li><a href="/checkout">CheckOut</a></li> -->
+                <li><a href="/fine">Fines</a></li>
+                <li><a href="/borrower">Borrower</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <form method="POST" action="borrower" novalidate>
+        <h1>Create New Borrower</h1>
+
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="ssn">SSN:</label>
+            <input type="text" id="ssn" name="ssn" required>
+        </div>
+
+        <div class="form-group">
+            <label for="card">Card Number:</label>
+            <input type="text" id="card" name="card" required>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required>
+        </div>
+
+        <div class="form-group">
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+        </div>
+
+        <button type="submit">Create Borrower</button>
+    </form>
+</body>
+
+</html>

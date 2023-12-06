@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}">
+    <title>Library Management System</title>
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Library Management System</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/search">Search Books</a></li>
+                <li><a href="/checkin">CheckIn</a></li>
+                <!-- <li><a href="/checkout">CheckOut</a></li> -->
+                <li><a href="/fine">Fines</a></li>
+                <li><a href="/borrower">Borrower</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <main class="container">
+        <h1>Welcome to the Library Management System</h1>
+        <div class="carousel-container">
+            <div class="carousel-slide">
+                <img src="{{url_for('static', filename='img/book1.jpg')}}" alt="Image 1">
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

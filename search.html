@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check In Books</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/searchs.css')}}">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Library Management System</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/search">Search Books</a></li>
+                <li><a href="/checkin">CheckIn</a></li>
+                <!-- <li><a href="/checkout">CheckOut</a></li> -->
+                <li><a href="/fine">Fines</a></li>
+                <li><a href="/borrower">Borrower</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="search">
+        <h2>Search Books</h2>
+        <form id="searchForm" action="" method="post">
+            <input type="text" name="search" placeholder="Search by ISBN, Book Name, Authors Name">
+            <input type="text" id="cardnumber" name="card" placeholder="Enter Card Number">
+            <input type="submit" name="submit" value="Search">
+            <input type="button" value="Checkout" id="checkoutButton" class="checkoutButton">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ISBN</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Available</th>
+                        <th>Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+                    <tr>
+                        <td>{{i.ISBN13}}</td>
+                        <td>{{i.title}}</td>
+                        <td>{{i.author}}</td>
+                        <td>{{'Yes' if i.ISBN13 not in books else 'No'}}</td>
+                        <td><input type="checkbox" class="bookCheckbox" name="selectedBooks[]" value="{{i.ISBN13}}"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <script>
+        var selectedBooks = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var checkboxes = document.getElementsByClassName('bookCheckbox');
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].addEventListener('change', function() {});
+            }
+
+            document.getElementById('checkoutButton').addEventListener('click', function() {
+                updateSelectedBooks();
+                sendSelectedBooksToBackend();
+            });
+        });
+
+        function updateSelectedBooks() {
+            var checkboxes = document.getElementsByClassName('bookCheckbox');
+            selectedBooks = [];
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    selectedBooks.push(checkboxes[i].value);
+                }
+            }
+        }
+
+        function sendSelectedBooksToBackend() {
+            const cardNumber = document.getElementById('cardnumber').value
+            if (cardNumber == '') {
+                alert('Please, Enter your Card Number')
+            } else {
+                fetch('/checkout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            selectedBooks: selectedBooks,
+                            cardNumber: cardNumber
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            console.log('Error: ' + data.error);
+                            alert('Error: ' + data.error);
+                        }
+                        if (data.success) {
+                            alert('Success:' + data.success);
+
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        }
+    </script>
+
+</body>
+
+</html>

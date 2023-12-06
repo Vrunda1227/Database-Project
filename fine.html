@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check In Books</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/fines.css')}}">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Library Management System</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/search">Search Books</a></li>
+                <li><a href="/checkin">CheckIn</a></li>
+                <!-- <li><a href="/checkout">CheckOut</a></li> -->
+                <li><a href="/fine">Fines</a></li>
+                <li><a href="/borrower">Borrower</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <div id="check-in-books">
+        <h2>Check Out Fines</h2>
+        <form id="finesForm">
+            <input type="text" name="search" id="cardNumberInput" placeholder="Search by Card Number">
+            <input type="submit" name="submit" value="Search">
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>Date out</th>
+                    <th>Due Date</th>
+                    <th>Fine Amount</th>
+                </tr>
+            </thead>
+            <tbody id="finesTableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('finesForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var cardNumber = document.getElementById('cardNumberInput').value;
+
+            fetch('/fine', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        cardNumber: cardNumber
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var tbody = document.getElementById('finesTableBody');
+                    tbody.innerHTML = '';
+                    data.books.forEach(item => {
+                        var newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                        <td>${item.ISBN}</td>
+                        <td>${item.date_out}</td>
+                        <td>${item.due_date}</td>
+                        <td>$${item.fine}</td>
+                    `;
+                        tbody.appendChild(newRow);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+
+</body>
+
+</html>

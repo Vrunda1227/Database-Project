@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check In Books</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/checkin.css')}}">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Library Management System</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/search">Search Books</a></li>
+                <li><a href="/checkin">CheckIn</a></li>
+                <!-- <li><a href="/checkout">CheckOut</a></li> -->
+                <li><a href="/fine">Fines</a></li>
+                <li><a href="/borrower">Borrower</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <div id="check-in-books">
+        <h2>Check In Books</h2>
+        <form id="checkInForm">
+            <input type="text" name="search" id="cardNumber" placeholder="Search by ISBN, Card Number or Borrower Name">
+            <input type="submit" name="submit" value="Search">
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Loan ID</th>
+                    <th>ISBN</th>
+                    <th>Card Number</th>
+                    <th>Date Out</th>
+                    <th>Due Date</th>
+                    <th>Date In</th>
+                    <th class="action">Action</th>
+                </tr>
+            </thead>
+            <tbody id="booksTableBody">
+                <!-- This is where the table rows will be dynamically inserted -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('checkInForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var cardNumber = document.getElementById('cardNumber').value;
+
+            fetch('/checkin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        cardNumber: cardNumber
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var tbody = document.getElementById('booksTableBody');
+                    tbody.innerHTML = '';
+
+                    data.books.forEach(book => {
+                        var newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                        <td>${book[0]}</td>
+                        <td>${book[1]}</td>
+                        <td>${book[2]}</td>
+                        <td>${book[3]}</td>
+                        <td>${book[4]}</td>
+                        <td>${getCurrentDate()}</td>
+                        <td class="action"><a href="#" class="check-in-link" data-isbn="${book[1]}" data-card="${book[2]}">Check In</a></td>
+        `;
+                        tbody.appendChild(newRow);
+                    });
+
+                    function getCurrentDate() {
+                        var currentDate = new Date();
+                        var formattedDate = currentDate.toISOString().slice(0, 10);
+                        return formattedDate;
+                    }
+
+                    // Add event listener for check-in links
+                    document.querySelectorAll('.check-in-link').forEach(link => {
+                        link.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            var isbn = this.getAttribute('data-isbn');
+                            var cardNumber = this.getAttribute('data-card');
+                            checkInBook(isbn, cardNumber);
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        function checkInBook(isbn, cardNumber) {
+            fetch('/checkfines', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        isbn: isbn,
+                        cardNumber: cardNumber
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.success)
+                    }
+                    if (data.error) {
+                        alert(`Error: ${data.error}`);
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>
